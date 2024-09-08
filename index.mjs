@@ -1,47 +1,48 @@
-import { createServer } from "node:http";
-// Create the server
-const server = createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/data') {
-    // Handle GET request
-    const responseData = {
-      message: 'This is a GET response!',
-      data: {
-        id: 1,
-        name: 'Sample Data'
-      }
-    };
+import {createServer} from 'node:http'
+// Function to handle incoming requests
+const requestListener = (req, res) => {
+    // Parse the URL using the WHATWG URL API
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(responseData));
+    // Set headers for the response (JSON and status code 200)
+    res.setHeader('Content-Type', 'application/json');
 
-  } else if (req.method === 'POST' && req.url === '/submit') {
-    // Handle POST request
-    let body = '';
+    // Log the method and URL to debug
+    console.log(`Request method: ${req.method}, Request URL: ${parsedUrl.pathname}`);
 
-    // Collect the incoming data
-    req.on('data', chunk => {
-      body += chunk.toString(); // Convert buffer to string
-    });
+    // GET request handling
+    if (req.method === 'GET' && parsedUrl.pathname === '/api/data') {
+        res.writeHead(200);
+        res.end(JSON.stringify({ message: 'Hello, this is your data!' }));
+    }
+    // POST request handling
+    else if (req.method === 'POST' && parsedUrl.pathname === '/api/data') {
+        let body = '';
 
-    // Once all data is received
-    req.on('end', () => {
-      const parsedData = JSON.parse(body); // Parse JSON data
-      const responseData = {
-        message: 'Data received successfully!',
-        receivedData: parsedData
-      };
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(responseData));
-    });
+        // Collect data chunks
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
 
-  } else {
-    // Handle 404 for other routes
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('404 Not Found');
-  }
-});
+        // Once data collection is done
+        req.on('end', () => {
+            const receivedData = JSON.parse(body); // Parse the received JSON
+            res.writeHead(200); // Ensure headers are sent only once
+            res.end(JSON.stringify({ message: 'Data received!', data: receivedData }));
+        });
+    }
+    // If route or method is not found
+    else {
+        res.writeHead(404);
+        res.end(JSON.stringify({ message: 'Route not found' }));
+    }
+};
+
+// Create an HTTP server
+const server = createServer(requestListener);
 
 // Start the server
-server.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
+const PORT = 3000;
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
