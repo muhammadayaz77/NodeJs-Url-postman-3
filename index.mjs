@@ -6,7 +6,7 @@ const requestListener = (req, res) => {
 
     // Set headers for the response (JSON and status code 200)
     res.setHeader('Content-Type', 'application/json');
-
+    
     // Log the method and URL to debug
     console.log(`Request method: ${req.method}, Request URL: ${parsedUrl.pathname}`);
 
@@ -26,9 +26,25 @@ const requestListener = (req, res) => {
 
         // Once data collection is done
         req.on('end', () => {
-            const receivedData = JSON.parse(body); // Parse the received JSON
+            const receivedData = JSON.parse(body); // Parse the received JSON   
             res.writeHead(200); // Ensure headers are sent only once
             res.end(JSON.stringify({ message: 'Data received!', data: receivedData }));
+        });
+    }
+     // PUT request handling (newly added)
+     else if (req.method === 'PUT' && parsedUrl.pathname === '/api/data') {
+        let body = '';
+
+        // Collect data chunks
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+
+        // Once data collection is done
+        req.on('end', () => {
+            const updatedData = JSON.parse(body); // Parse the received JSON
+            res.writeHead(200); // Send status 200
+            res.end(JSON.stringify({ message: 'Data updated!', data: updatedData }));
         });
     }
     // If route or method is not found
