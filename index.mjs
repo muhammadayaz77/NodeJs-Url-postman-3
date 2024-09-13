@@ -32,6 +32,22 @@ const requestListener = (req, res) => {
         });
     }
      // PUT request handling (newly added)
+     else if (req.method === 'DELETE' && parsedUrl.pathname === '/api/data') {
+        let body = '';
+
+        // Collect data chunks
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+
+        // Once data collection is done
+        req.on('end', () => {
+            const updatedData = JSON.parse(body); // Parse the received JSON
+            res.writeHead(200); // Send status 200
+            res.end(JSON.stringify({ message: 'Data deleted!', data: updatedData }));
+        });
+    }
+     // PUT request handling (newly added)
      else if (req.method === 'PUT' && parsedUrl.pathname === '/api/data') {
         let body = '';
 
