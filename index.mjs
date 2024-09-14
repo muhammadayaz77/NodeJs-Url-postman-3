@@ -32,7 +32,9 @@ const requestListener = (req, res) => {
         });
     }
      // PUT request handling (newly added)
-     else if (req.method === 'DELETE' && parsedUrl.pathname === '/api/data') {
+     else if (req.method === 'DELETE' && parsedUrl.pathname.startsWith('/api/data/')) {
+        console.log('path : ',parsedUrl.pathname.split('/'));
+        let itemId = parsedUrl.pathname.split('/').pop();
         let body = '';
 
         // Collect data chunks
@@ -44,11 +46,12 @@ const requestListener = (req, res) => {
         req.on('end', () => {
             const updatedData = JSON.parse(body); // Parse the received JSON
             res.writeHead(200); // Send status 200
-            res.end(JSON.stringify({ message: 'Data deleted!', data: updatedData }));
+            res.end(JSON.stringify({ message: `Delete Request : ${itemId}`, data: updatedData }));
         });
     }
      // PUT request handling (newly added)
-     else if (req.method === 'PUT' && parsedUrl.pathname === '/api/data') {
+     else if (req.method === 'PUT' && parsedUrl.pathname.startsWith('/api/data')) {
+        let itemId = parsedUrl.pathname.split('/').pop();
         let body = '';
 
         // Collect data chunks
@@ -60,7 +63,7 @@ const requestListener = (req, res) => {
         req.on('end', () => {
             const updatedData = JSON.parse(body); // Parse the received JSON
             res.writeHead(200); // Send status 200
-            res.end(JSON.stringify({ message: 'Data updated!', data: updatedData }));
+            res.end(JSON.stringify({ message: `Update Request : ${itemId}`, data: updatedData }));
         });
     }
     // If route or method is not found
