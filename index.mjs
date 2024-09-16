@@ -15,6 +15,10 @@ const requestListener = (req, res) => {
         res.writeHead(200);
         res.end(JSON.stringify({ message: 'Hello, this is your data!' }));
     }
+    else if(req.url == '/'){
+        res.writeHead(200);
+        res.end(JSON.stringify({page : 'Home'}))
+    }
     // POST request handling
     else if (req.method === 'POST' && parsedUrl.pathname === '/api/data') {
         let body = '';
