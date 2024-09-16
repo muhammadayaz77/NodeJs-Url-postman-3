@@ -61,7 +61,7 @@ const requestListener = (req, res) => {
     // If route or method is not found
     else {
         res.writeHead(404);
-        res.end(JSON.stringify({ message: 'Route not found' }));
+        res.end(JSON.stringify({ message: 'Route not found', path : 'go to /api/data' }));
     }
 };
 
