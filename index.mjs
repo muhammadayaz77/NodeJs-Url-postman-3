@@ -1,13 +1,7 @@
 import {createServer} from 'node:http'
-// Function to handle incoming requests
 const requestListener = (req, res) => {
-    // Parse the URL using the WHATWG URL API
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
-
-    // Set headers for the response (JSON and status code 200)
     res.setHeader('Content-Type', 'application/json');
-    
-    // Log the method and URL to debug
     console.log(`Request method: ${req.method}, Request URL: ${parsedUrl.pathname}`);
 
     // GET request handling
