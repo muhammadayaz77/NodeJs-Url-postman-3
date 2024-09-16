@@ -38,12 +38,10 @@ const requestListener = (req, res) => {
      else if (req.method === 'DELETE' && parsedUrl.pathname.startsWith('/api/data/')) {
         let itemId = parsedUrl.pathname.split('/').pop();
         let body = '';
-
         // Collect data chunks
         req.on('data', chunk => {
             body += chunk.toString();
         });
-
         // Once data collection is done
         req.on('end', () => {
             const updatedData = JSON.parse(body); // Parse the received JSON
@@ -55,12 +53,10 @@ const requestListener = (req, res) => {
      else if (req.method === 'PUT' && parsedUrl.pathname.startsWith('/api/data')) {
         let itemId = parsedUrl.pathname.split('/').pop();
         let body = '';
-
         // Collect data chunks
         req.on('data', chunk => {
             body += chunk.toString();
         });
-
         // Once data collection is done
         req.on('end', () => {
             const updatedData = JSON.parse(body); // Parse the received JSON
@@ -81,5 +77,5 @@ const server = createServer(requestListener);
 // Start the server
 const PORT = 3000;
 server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });
