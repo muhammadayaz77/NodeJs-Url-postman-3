@@ -22,7 +22,6 @@ const requestListener = (req, res) => {
     // POST request handling
     else if (req.method === 'POST' && parsedUrl.pathname === '/api/data') {
         let body = '';
-
         // Collect data chunks
         req.on('data', chunk => {
             body += chunk.toString();
@@ -37,7 +36,6 @@ const requestListener = (req, res) => {
     }
      // PUT request handling (newly added)
      else if (req.method === 'DELETE' && parsedUrl.pathname.startsWith('/api/data/')) {
-        console.log('path : ',parsedUrl.pathname.split('/'));
         let itemId = parsedUrl.pathname.split('/').pop();
         let body = '';
 
